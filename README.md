@@ -9,6 +9,9 @@ A Magento 2 module that integrates Pokemon data into your product catalog by con
 - Customizes category product listing view
 - Provides Pokemon information block
 
+## Demo
+![screenshot_category_view.png](docs/images/screenshot_category_view.png)
+
 ## Requirements
 
 - Magento 2.4.x
