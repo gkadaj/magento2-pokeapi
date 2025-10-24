@@ -1,0 +1,15 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$viewModel = $block->getParentBlock()->getViewModel();
+/** @var \Akid\PokeApi\ViewModel\CategoryProductViewModel $viewModel */
+$product = $viewModel->getProduct();
+
+if (!$product) {
+    return;
+}
+
+$pokemonImageUrl = $viewModel->getPokemonImageUrl($product);
+?>
+<?php if ($pokemonImageUrl): ?>
+    <img src="<?= $pokemonImageUrl ?>" alt="<?= $viewModel->updateProductName($product, $block->escapeHtml($product->getName())) ?>"/>
+<?php endif; ?>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <referenceBlock name="page.main.title">
+        <arguments>
+            <argument name="view_model" xsi:type="object">Akid\PokeApi\ViewModel\CategoryProductViewModel</argument>
+        </arguments>
+        <action method="setTemplate">
+            <argument name="template" xsi:type="string">Akid_PokeApi::html/title.phtml</argument>
+        </action>
+        <block name="page.pokemon.picture" template="Akid_PokeApi::pokemon_picture.phtml"/>
+    </referenceBlock>
+</page>

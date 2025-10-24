@@ -5,6 +5,7 @@ namespace Akid\PokeApi\ViewModel;
 
 use Akid\PokeApi\Api\Data\GetPokemonImageUrlProviderInterface;
 use Akid\PokeApi\Api\Data\GetPokemonNameProviderInterface;
+use Magento\Catalog\Helper\Data;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 
@@ -12,8 +13,14 @@ class CategoryProductViewModel implements ArgumentInterface
 {
     public function __construct(
         private readonly GetPokemonNameProviderInterface $getPokemonNameProvider,
-        private readonly GetPokemonImageUrlProviderInterface $getPokemonImageUrlProvider
+        private readonly GetPokemonImageUrlProviderInterface $getPokemonImageUrlProvider,
+        private readonly Data $catalogHelper
     ) {
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->catalogHelper->getProduct();
     }
 
     public function updateProductName(Product $product, string $productName): string

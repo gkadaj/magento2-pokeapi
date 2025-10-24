@@ -1,0 +1,37 @@
+<?php
+/**
+ * @var $block \Magento\Theme\Block\Html\Title
+ */
+/** @var \Akid\PokeApi\ViewModel\CategoryProductViewModel $viewModel */
+$viewModel = $block->getViewModel();
+
+$cssClass = $block->getCssClass() ? ' ' . $block->getCssClass() : '';
+$titleHtml = '';
+if (trim($block->getPageHeading())) {
+    $title = $block->escapeHtml($block->getPageHeading());
+    $product = $viewModel->getProduct();
+
+    if ($product) {
+        $title = $viewModel->updateProductName($product, $title);
+    }
+
+    $titleHtml = '<span class="base" data-ui-id="page-title-wrapper" '
+        . $block->getAddBaseAttribute()
+        . '>'
+        . $title
+        . '</span>';
+}
+?>
+<?php if ($titleHtml) : ?>
+    <?= $block->getChildHtml('page.pokemon.picture') ?>
+    <div class="page-title-wrapper<?= $block->escapeHtmlAttr($cssClass) ?>">
+        <h1 class="page-title"
+            <?php if ($block->getId()) : ?> id="<?= $block->escapeHtmlAttr($block->getId()) ?>" <?php endif; ?>
+            <?php if ($block->getAddBaseAttributeAria()) : ?>
+                aria-labelledby="<?= $block->escapeHtmlAttr($block->getAddBaseAttributeAria()) ?>"
+            <?php endif; ?>>
+            <?= /* @noEscape */ $titleHtml ?>
+        </h1>
+        <?= $block->getChildHtml() ?>
+    </div>
+<?php endif; ?>
