@@ -1,0 +1,16 @@
+{
+  "name": "gkadaj/magento2-pokeapi",
+  "description": "Magento2 module integrating PokeAPI to dynamically show Pokemon data on products",
+  "type": "magento2-module",
+  "license": "proprietary",
+  "require": {
+      "php": ">=8.3",
+      "magento/framework": "*",
+      "magento/module-catalog": "*"
+  },
+  "autoload": {
+      "psr-4": {
+          "Akid\\PokeApi\\": ""
+      }
+  }
+}

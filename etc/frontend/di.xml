@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Akid\PokeApi\Api\Data\GetPokemonNameProviderInterface"
+                type="Akid\PokeApi\Provider\GetPokemonNameProvider"/>
+    <preference for="Akid\PokeApi\Api\Data\GetPokemonImageUrlProviderInterface"
+                type="Akid\PokeApi\Provider\GetPokemonImageUrlProvider"/>
+    <preference for="Akid\PokeApi\Api\FetchPokeServiceInterface"
+                type="Akid\PokeApi\Service\FetchPokeService"/>
+</config>
