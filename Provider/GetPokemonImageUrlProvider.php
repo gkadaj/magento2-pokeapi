@@ -28,7 +28,13 @@ class GetPokemonImageUrlProvider implements GetPokemonImageUrlProviderInterface
             return null;
         }
 
-        return $this->pokemonDataSanitizer
+        $pokemonUrl = $this->pokemonDataSanitizer
             ->sanitizeImageUrl($pokemon['sprites']['front_default']);
+
+        if (!$pokemonUrl) {
+            return null;
+        }
+
+        return $pokemonUrl;
     }
 }

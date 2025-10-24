@@ -13,7 +13,7 @@ class PokemonDataSanitizer
         return trim($sanitized);
     }
 
-    public function sanitizeImageUrl(string $imageUrl): string
+    public function sanitizeImageUrl(string $imageUrl): mixed
     {
         return filter_var($imageUrl, FILTER_SANITIZE_URL);
     }
