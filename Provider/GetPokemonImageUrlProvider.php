@@ -4,19 +4,19 @@ declare(strict_types=1);
 namespace Akid\PokeApi\Provider;
 
 use Akid\PokeApi\Api\Data\GetPokemonImageUrlProviderInterface;
+use Akid\PokeApi\Api\ErrorHandlerInterface;
 use Akid\PokeApi\Api\FetchPokeServiceInterface;
 use Akid\PokeApi\Sanitization\PokemonDataSanitizer;
 use Akid\PokeApi\Setup\Patch\Data\AddPokemonNameAttribute;
 use Exception;
 use Magento\Catalog\Model\Product;
-use Psr\Log\LoggerInterface;
 
 class GetPokemonImageUrlProvider implements GetPokemonImageUrlProviderInterface
 {
     public function __construct(
         private readonly FetchPokeServiceInterface $pokeService,
         private readonly PokemonDataSanitizer $pokemonDataSanitizer,
-        private readonly LoggerInterface $logger
+        private readonly ErrorHandlerInterface $errorHandler
     ) {
     }
 
@@ -30,13 +30,13 @@ class GetPokemonImageUrlProvider implements GetPokemonImageUrlProviderInterface
         try {
             $pokemon = $this->pokeService->execute($name);
         } catch (Exception $e) {
-            $this->logger->error($e->getMessage());
+            $this->errorHandler->handle($e);
 
             return null;
         }
 
         if (!$pokemon || !isset($pokemon['sprites']['front_default'])) {
-            $this->logger->error('No pokemon data received');
+            $this->errorHandler->handle(new Exception('No pokemon data received'));
 
             return null;
         }
@@ -45,7 +45,7 @@ class GetPokemonImageUrlProvider implements GetPokemonImageUrlProviderInterface
             ->sanitizeImageUrl($pokemon['sprites']['front_default']);
 
         if (!$pokemonUrl) {
-            $this->logger->error('Pokemon image url is not valid');
+            $this->errorHandler->handle(new Exception('Pokemon image url is not valid'));
 
             return null;
         }

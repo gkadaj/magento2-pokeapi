@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Akid\PokeApi\Service;
 
+use Akid\PokeApi\Api\ErrorHandlerInterface;
 use Akid\PokeApi\Api\FetchPokeServiceInterface;
 use Akid\PokeApi\Connector\PokeApiConnector;
 use Akid\PokeApi\Exception\NoApiDataReceivedException;
 use Akid\PokeApi\Provider\ConfigProvider;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Serialize\SerializerInterface;
-use Psr\Log\LoggerInterface;
 
 class FetchPokeService implements FetchPokeServiceInterface
 {
@@ -20,7 +20,7 @@ class FetchPokeService implements FetchPokeServiceInterface
         private readonly CacheInterface $cache,
         private readonly SerializerInterface $serializer,
         private readonly ConfigProvider $configProvider,
-        private readonly LoggerInterface $logger
+        private readonly ErrorHandlerInterface $errorHandler
     ) {
     }
 
@@ -41,7 +41,7 @@ class FetchPokeService implements FetchPokeServiceInterface
         try {
             $data = $this->client->get($url);
         } catch (NoApiDataReceivedException $e) {
-            $this->logger->error($e->getMessage());
+            $this->errorHandler->handle($e);
 
             return null;
         }

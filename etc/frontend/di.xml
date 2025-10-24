@@ -6,4 +6,6 @@
                 type="Akid\PokeApi\Provider\GetPokemonImageUrlProvider"/>
     <preference for="Akid\PokeApi\Api\FetchPokeServiceInterface"
                 type="Akid\PokeApi\Service\FetchPokeService"/>
+    <preference for="Akid\PokeApi\Api\ErrorHandlerInterface"
+                type="Akid\PokeApi\Handler\ErrorHandler"/>
 </config>

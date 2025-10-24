@@ -4,19 +4,19 @@ declare(strict_types=1);
 namespace Akid\PokeApi\Provider;
 
 use Akid\PokeApi\Api\Data\GetPokemonNameProviderInterface;
+use Akid\PokeApi\Api\ErrorHandlerInterface;
 use Akid\PokeApi\Api\FetchPokeServiceInterface;
 use Akid\PokeApi\Sanitization\PokemonDataSanitizer;
 use Akid\PokeApi\Setup\Patch\Data\AddPokemonNameAttribute;
 use Exception;
 use Magento\Catalog\Model\Product;
-use Psr\Log\LoggerInterface;
 
 class GetPokemonNameProvider implements GetPokemonNameProviderInterface
 {
     public function __construct(
         private readonly FetchPokeServiceInterface  $pokeService,
         private readonly PokemonDataSanitizer $pokemonDataSanitizer,
-        private readonly LoggerInterface $logger
+        private readonly ErrorHandlerInterface $errorHandler
     ) {
     }
 
@@ -30,13 +30,13 @@ class GetPokemonNameProvider implements GetPokemonNameProviderInterface
             $pokemon = $this->pokeService
                 ->execute($product->getData(AddPokemonNameAttribute::POKEMON_NAME_ATTRIBUTE_CODE));
         } catch (Exception $e) {
-            $this->logger->error($e->getMessage());
+            $this->errorHandler->handle($e);
 
             return null;
         }
 
         if (!$pokemon || !isset($pokemon['name'])) {
-            $this->logger->error('No pokemon data received');
+            $this->errorHandler->handle(new Exception('No pokemon data received'));
 
             return null;
         }
