@@ -15,6 +15,9 @@
                     <label>PokeAPI Base URL</label>
                     <comment>Default: https://pokeapi.co/api/v2/</comment>
                     <config_path>pokeapi/general/base_url</config_path>
+                    <depends>
+                        <field id="pokeapi/general/enabled">1</field>
+                    </depends>
                 </field>
             </group>
         </section>

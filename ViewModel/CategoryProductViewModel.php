@@ -33,7 +33,7 @@ class CategoryProductViewModel implements ArgumentInterface
         return $productName;
     }
 
-    public function getPokemonImageUrl(Product $product): string
+    public function getPokemonImageUrl(Product $product): ?string
     {
         return $this->getPokemonImageUrlProvider->execute($product);
     }
