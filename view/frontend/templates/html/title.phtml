@@ -9,7 +9,7 @@ $cssClass = $block->getCssClass() ? ' ' . $block->getCssClass() : '';
 $titleHtml = '';
 if (trim($block->getPageHeading())) {
     $title = $block->escapeHtml($block->getPageHeading());
-    $product = $viewModel->getProduct();
+    $product = $viewModel?->getProduct();
 
     if ($product) {
         $title = $viewModel->updateProductName($product, $title);

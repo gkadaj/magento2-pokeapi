@@ -2,7 +2,7 @@
 /** @var \Magento\Framework\View\Element\Template $block */
 $viewModel = $block->getParentBlock()->getViewModel();
 /** @var \Akid\PokeApi\ViewModel\CategoryProductViewModel $viewModel */
-$product = $viewModel->getProduct();
+$product = $viewModel?->getProduct();
 
 if (!$product) {
     return;

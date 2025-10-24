@@ -70,7 +70,9 @@ $viewModel = $block->getViewModel();
                     <div class="product details product-item-details">
                         <?php
                         $_productNameStripped = $block->stripTags($_product->getName(), null, true);
-                        $_productNameStripped = $viewModel->updateProductName($_product, $_productNameStripped);
+                        if ($viewModel) {
+                            $_productNameStripped = $viewModel->updateProductName($_product, $_productNameStripped);
+                        }
                         ?>
                         <strong class="product name product-item-name">
                             <a class="product-item-link"
