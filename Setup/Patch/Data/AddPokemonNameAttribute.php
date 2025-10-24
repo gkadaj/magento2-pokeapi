@@ -10,6 +10,8 @@ use Magento\Framework\Setup\Patch\DataPatchInterface;
 
 class AddPokemonNameAttribute implements DataPatchInterface
 {
+    public const string POKEMON_NAME_ATTRIBUTE_CODE = 'pokemon_name';
+
     private $moduleDataSetup;
     private $eavSetupFactory;
 
@@ -23,7 +25,7 @@ class AddPokemonNameAttribute implements DataPatchInterface
     {
         $this->moduleDataSetup->getConnection()->startSetup();
         $eavSetup = $this->eavSetupFactory->create(['setup' => $this->moduleDataSetup]);
-        $eavSetup->addAttribute(Product::ENTITY, 'pokemon_name', [
+        $eavSetup->addAttribute(Product::ENTITY, self::POKEMON_NAME_ATTRIBUTE_CODE, [
             'type' => 'varchar',
             'label' => 'Pokemon Name',
             'input' => 'text',
