@@ -27,3 +27,6 @@ A Magento 2 module that integrates Pokemon data into your product catalog by con
 5. Run the setup:di:compile command: $ bin/magento setup:di:compile
 6. Run the setup:static-content:deploy command: $ bin/magento setup:static-content:deploy
 7. Clear the cache: $ bin/magento cache:clean
+
+## Configuration
+Stores > Configuration > General > PokeAPI Integration
