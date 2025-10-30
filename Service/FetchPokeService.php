@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace Akid\PokeApi\Service;
 
-use Akid\PokeApi\Api\ErrorHandlerInterface;
 use Akid\PokeApi\Api\FetchPokeServiceInterface;
 use Akid\PokeApi\Connector\PokeApiConnector;
-use Akid\PokeApi\Exception\NoApiDataReceivedException;
 use Akid\PokeApi\Provider\ConfigProvider;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Serialize\SerializerInterface;
@@ -19,15 +17,14 @@ class FetchPokeService implements FetchPokeServiceInterface
         private readonly PokeApiConnector $client,
         private readonly CacheInterface $cache,
         private readonly SerializerInterface $serializer,
-        private readonly ConfigProvider $configProvider,
-        private readonly ErrorHandlerInterface $errorHandler
+        private readonly ConfigProvider $configProvider
     ) {
     }
 
-    public function execute(string $pokeIdentifier): ?array
+    public function execute(string $pokeIdentifier): array
     {
         if (!$this->configProvider->isPokeAPiEnabled()) {
-            return null;
+            return [];
         }
 
         $key = 'pokeapi_' . md5($pokeIdentifier);
@@ -37,14 +34,7 @@ class FetchPokeService implements FetchPokeServiceInterface
         }
 
         $url = $this->configProvider->getPokeAPiBaseUrl() . '/pokemon/' . strtolower($pokeIdentifier);
-
-        try {
-            $data = $this->client->get($url);
-        } catch (NoApiDataReceivedException $e) {
-            $this->errorHandler->handle($e);
-
-            return null;
-        }
+        $data = $this->client->get($url);
 
         if ($data) {
             $this->cache->save($this->serializer->serialize($data), $key, [], $this->cacheTtl);

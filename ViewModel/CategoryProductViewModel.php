@@ -5,16 +5,21 @@ namespace Akid\PokeApi\ViewModel;
 
 use Akid\PokeApi\Api\Data\GetPokemonImageUrlProviderInterface;
 use Akid\PokeApi\Api\Data\GetPokemonNameProviderInterface;
+use Akid\PokeApi\Api\ErrorHandlerInterface;
+use Akid\PokeApi\Exception\NoApiDataReceivedException;
+use Akid\PokeApi\Exception\WrongPokemonDataException;
+use Akid\PokeApi\Exception\WrongPokemonPictureException;
 use Magento\Catalog\Helper\Data;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 
-class CategoryProductViewModel implements ArgumentInterface
+readonly class CategoryProductViewModel implements ArgumentInterface
 {
     public function __construct(
-        private readonly GetPokemonNameProviderInterface $getPokemonNameProvider,
-        private readonly GetPokemonImageUrlProviderInterface $getPokemonImageUrlProvider,
-        private readonly Data $catalogHelper
+        private GetPokemonNameProviderInterface $getPokemonNameProvider,
+        private GetPokemonImageUrlProviderInterface $getPokemonImageUrlProvider,
+        private Data $catalogHelper,
+        private ErrorHandlerInterface $errorHandler
     ) {
     }
 
@@ -25,16 +30,26 @@ class CategoryProductViewModel implements ArgumentInterface
 
     public function updateProductName(Product $product, string $productName): string
     {
-        $pokemonName = $this->getPokemonNameProvider->execute($product);
-        if ($pokemonName) {
-            return sprintf("%s %s", $productName, $pokemonName);
+        try {
+            $pokemonName = $this->getPokemonNameProvider->execute($product);
+            if ($pokemonName) {
+                return sprintf("%s %s", $productName, $pokemonName);
+            }
+        } catch (NoApiDataReceivedException $e) {
+            $this->errorHandler->handle($e);
         }
 
         return $productName;
     }
 
-    public function getPokemonImageUrl(Product $product): ?string
+    public function getPokemonImageUrl(Product $product): string
     {
-        return $this->getPokemonImageUrlProvider->execute($product);
+        try {
+            return $this->getPokemonImageUrlProvider->execute($product);
+        } catch (NoApiDataReceivedException|WrongPokemonDataException|WrongPokemonPictureException $e) {
+            $this->errorHandler->handle($e);
+        }
+
+        return '';
     }
 }
