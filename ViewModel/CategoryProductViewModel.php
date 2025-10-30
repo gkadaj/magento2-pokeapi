@@ -6,9 +6,7 @@ namespace Akid\PokeApi\ViewModel;
 use Akid\PokeApi\Api\Data\GetPokemonImageUrlProviderInterface;
 use Akid\PokeApi\Api\Data\GetPokemonNameProviderInterface;
 use Akid\PokeApi\Api\ErrorHandlerInterface;
-use Akid\PokeApi\Exception\NoApiDataReceivedException;
-use Akid\PokeApi\Exception\WrongPokemonDataException;
-use Akid\PokeApi\Exception\WrongPokemonPictureException;
+use Exception;
 use Magento\Catalog\Helper\Data;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
@@ -35,7 +33,7 @@ readonly class CategoryProductViewModel implements ArgumentInterface
             if ($pokemonName) {
                 return sprintf("%s %s", $productName, $pokemonName);
             }
-        } catch (NoApiDataReceivedException $e) {
+        } catch (Exception $e) {
             $this->errorHandler->handle($e);
         }
 
@@ -46,7 +44,7 @@ readonly class CategoryProductViewModel implements ArgumentInterface
     {
         try {
             return $this->getPokemonImageUrlProvider->execute($product);
-        } catch (NoApiDataReceivedException|WrongPokemonDataException|WrongPokemonPictureException $e) {
+        } catch (Exception $e) {
             $this->errorHandler->handle($e);
         }
 
