@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class GetPokemonImageUrlProviderTest extends TestCase
 {
-    private const string POKEMON_PICTURE_URL = 'https://cdn.sstatic.net/Img/teams/teams-promo.svg';
+    private const string POKEMON_PICTURE_URL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/413.png';
 
     public function testUknownStructureApiResponse()
     {
