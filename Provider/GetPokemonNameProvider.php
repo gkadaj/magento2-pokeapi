@@ -14,7 +14,7 @@ readonly class GetPokemonNameProvider implements GetPokemonNameProviderInterface
 {
     public function __construct(
         private FetchPokeServiceInterface $pokeService,
-        private PokemonDataSanitizer      $pokemonDataSanitizer
+        private PokemonDataSanitizer $pokemonDataSanitizer
     ) {
     }
 
