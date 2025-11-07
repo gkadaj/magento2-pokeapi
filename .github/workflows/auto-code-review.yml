@@ -1,0 +1,58 @@
+name: Auto Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  code_review:
+    name: Run automated code review
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, intl
+
+      - name: Install composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Setup reviewdog
+        uses: reviewdog/action-setup@v1
+
+      - name: Run PHPStan and report via reviewdog
+        run: |
+          if [ -x ./vendor/bin/phpstan ]; then
+            ./vendor/bin/phpstan analyse -c phpstan.neon -l max --error-format=checkstyle > phpstan.xml || true
+            cat phpstan.xml | reviewdog -f=checkstyle -name=phpstan -reporter=github-pr-review -fail-on-error=false -level=warning
+          else
+            echo "phpstan not found; skipping"
+          fi
+
+      - name: Run PHPCS and report via reviewdog
+        run: |
+          if [ -x ./vendor/bin/phpcs ]; then
+            ./vendor/bin/phpcs --standard=PSR12 -q --report=checkstyle > phpcs.xml || true
+            cat phpcs.xml | reviewdog -f=checkstyle -name=phpcs -reporter=github-pr-review -fail-on-error=false -level=warning
+          else
+            echo "phpcs not found; skipping"
+          fi
+
+      - name: Run PHPUnit (tests)
+        run: |
+          if [ -x ./vendor/bin/phpunit ]; then
+            ./vendor/bin/phpunit --log-junit junit.xml || true
+          else
+            echo "phpunit not found; skipping"
+          fi
+
+      - name: Add short summary comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            Automated code review completed. See inline annotations for details (phpstan/phpcs). If the action ran but did not annotate, check workflow logs.
